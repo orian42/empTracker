@@ -1,5 +1,7 @@
 const express = require('express');
+const { prompt } = require('inquirer');
 const { Pool } = require('pg');
+const interface = require('./prompts.js');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -21,8 +23,6 @@ const pool = new Pool(
 
 pool.connect();
 
-
-
 // Default response for any other request (Not Found)
 app.use((req, res) => {
     res.status(404).end();
@@ -31,3 +31,5 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+interface();
