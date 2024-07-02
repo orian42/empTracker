@@ -1,13 +1,16 @@
+--Creates business database
 DROP DATABASE IF EXISTS business;
 CREATE DATABASE business;
 
 \c business;
 
+--Creates departments table
 CREATE TABLE departments (
     id SERIAL PRIMARY KEY,
     name VARCHAR (30)
 );
 
+--Creates roles table
 CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
     title VARCHAR(30),
@@ -16,6 +19,7 @@ CREATE TABLE roles (
     FOREIGN KEY (dept_id) REFERENCES departments(id)
 );
 
+--Creates employees table
 CREATE TABLE employees (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(30),
