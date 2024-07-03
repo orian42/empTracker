@@ -1,92 +1,49 @@
 const { prompt } = require('inquirer');
+const {viewDept, viewRoles, viewEmp} = require('./sqlFunctions.js');
 
 //This function is the highest level of the nested questions
 const interface = () => {
     prompt([
         {
             type: 'list',
-            message: 'What would you like to do?',
+            message: `\n\nWhat would you like to do?\n\n`,
             name: 'dbTask',
-            choices: ['View Information', 'Add Information', 'Update Information']
+            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Exit']
         }
     ])
         .then((response) => {
             let dbTask = response.dbTask;
             switch (dbTask) {
-                case 'View Information':
-                    console.log(`\nYou would like to view information.\n`);
-                    viewInfo();
+                case 'View all departments':
+                    viewDept();
                     break;
-                case 'Add Information':
-                    console.log(`\nYou would like to add information.\n`);
-                    addInfo();
+                case 'View all roles':
+                    viewRoles();                    
                     break;
-                case 'Update Information':
-                    console.log(`\nYou would like to update information.\n`);
-                    updateInfo();
+                case 'View all employees':
+                    viewEmp();
                     break;
+                case 'Add a department':
+                    console.log(`\nYou would like to add a department.\n`);
+                    
+                    break;
+                case 'Add a role':
+                    console.log(`\nYou would like to add a role.\n`);
+                    
+                    break;
+                case 'Add an employee':
+                    console.log(`\nYou would like to add an employee.\n`);
+                    
+                    break;
+                case 'Update an employee role':
+                    console.log(`\nYou would like to update an employee role.\n`);
+                    
+                    break;
+                case 'Exit':
+                    console.log(`\nGoodbye!\n`);
+                    process.exit(0);
             }
         })
-}
-
-//This function handles requests to view information in the database
-const viewInfo = () => {
-    prompt([
-        {
-            type: 'list',
-            message: 'What information would you like to view?',
-            name: 'dbTask',
-            choices: ['Departments', 'Roles', 'Employees']
-        }
-    ])
-        .then((response) => {
-            let dbTask = response.dbTask;
-            switch (dbTask) {
-                case 'Departments':
-                    console.log(`\nYou would like to view department information.\n`)
-                    break;
-                case 'Roles':
-                    console.log(`\nYou would like to view role information.\n`)
-                    break;
-                case 'Employees':
-                    console.log(`\nYou would like to view employee information.\n`)
-                    break;
-            }
-            interface();
-        })
-}
-
-//This function handles requests to add information to the database
-const addInfo = () => {
-    prompt([
-        {
-            type: 'list',
-            message: 'What information would you like to add?',
-            name: 'dbTask',
-            choices: ['Department', 'Role', 'Employee']
-        }
-    ])
-        .then((response) => {
-            let dbTask = response.dbTask;
-            switch (dbTask) {
-                case 'Department':
-                    console.log(`\nYou would like to add a department.\n`)
-                    break;
-                case 'Role':
-                    console.log(`\nYou would like to add a role.\n`)
-                    break;
-                case 'Employee':
-                    console.log(`\nYou would like to add an employee.\n`)
-                    break;
-            }
-            interface();
-        })
-}
-
-//This function handles requests to update information in the database
-const updateInfo = () => {
-    console.log (`\nOnly updating of employee roles is currently available.\n`);
-    interface();
 }
 
 module.exports = interface;
