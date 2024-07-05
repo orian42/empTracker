@@ -1,7 +1,6 @@
 const { prompt } = require('inquirer');
-const {viewDept, viewRoles, viewEmp} = require('./sqlFunctions.js');
+const {viewDept, viewRoles, viewEmp, addDept, addRole, getDeptData} = require('./sqlFunctions.js');
 
-//This function is the highest level of the nested questions
 const interface = () => {
     prompt([
         {
@@ -24,12 +23,10 @@ const interface = () => {
                     viewEmp();
                     break;
                 case 'Add a department':
-                    console.log(`\nYou would like to add a department.\n`);
-                    
+                    addDeptInfo();
                     break;
                 case 'Add a role':
-                    console.log(`\nYou would like to add a role.\n`);
-                    
+                    addRoleInfo();
                     break;
                 case 'Add an employee':
                     console.log(`\nYou would like to add an employee.\n`);
@@ -44,6 +41,48 @@ const interface = () => {
                     process.exit(0);
             }
         })
+}
+
+const addDeptInfo = () => {
+    prompt([
+        {
+            type: 'input',
+            message: `\n\nPlease enter the name of the new department:\n\n`,
+            name: 'deptName'
+        }
+    ])
+    .then((response) => {
+        addDept(response.deptName);
+    })
+}
+
+const addRoleInfo = async () => {
+    try {
+        const deptChoices = await getDeptData();
+        
+        const response = await prompt([
+            {
+                type: 'input',
+                message: `\n\nPlease enter the name of the new role:`,
+                name: 'roleName'
+            },
+            {
+                type: 'input',
+                message: `\n\nPlease enter the salary for the new role:`,
+                name: 'roleSalary'
+            },
+            {
+                type: 'list',
+                message: `\n\nPlease choose the department of the new role:`,
+                name: 'roleDept',
+                choices: deptChoices
+            },
+        ]);
+
+        addRole(response.roleName, response.roleSalary, response.roleDept);
+    } catch (error) {
+        console.error('Error adding role:', error);
+    }
 }
 
 module.exports = interface;

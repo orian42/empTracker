@@ -17,4 +17,5 @@ app.listen(PORT, () => {
     console.log(`\n\nServer running on port ${PORT}`);
 });
 
+//Call function to begin application
 interface();
