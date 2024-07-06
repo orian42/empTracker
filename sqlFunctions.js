@@ -13,6 +13,7 @@ const pool = new Pool(
 pool.connect();
 
 const viewDept = () => {
+    console.clear;
     pool.query('SELECT name AS "Department Name", id AS "Department ID" FROM departments', function (err, { rows }) {
         console.table(rows);
     });
@@ -54,11 +55,47 @@ const getDeptData = async () => {
     }
 }
 
+const addEmployee = async (first_name, last_name, role, manager) => {
+    pool.query('INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES($1, $2, $3, $4) RETURNING *', [first_name, last_name, role, manager]);
+    console.log('Success!');
+}
+
+const getRoleData = async () => {
+    try {
+        const { rows } = await pool.query('SELECT title, id FROM roles');
+        const data = rows.map(row => ({
+            name: row.title,
+            value: row.id,
+        }));
+        return data;
+    } catch (error) {
+        console.error('Error fetching role data:', error);
+        return [];
+    }
+}
+
+const getMgrData = async () => {
+    try {
+        const { rows } = await pool.query(`SELECT CONCAT(first_name, ' ', last_name) AS manager, id FROM employees`);
+        const data = rows.map(row => ({
+            name: row.manager,
+            value: row.id,
+        }));
+        return data;
+    } catch (error) {
+        console.error('Error fetching manager data:', error);
+        return [];
+    }
+}
+
 module.exports = {
     viewDept,
     viewRoles,
     viewEmp,
     addDept,
     addRole,
-    getDeptData
+    getDeptData, 
+    addEmployee,
+    getRoleData,
+    getMgrData
 };

@@ -1,11 +1,11 @@
 const { prompt } = require('inquirer');
-const {viewDept, viewRoles, viewEmp, addDept, addRole, getDeptData} = require('./sqlFunctions.js');
+const {viewDept, viewRoles, viewEmp, addDept, addRole, getDeptData, addEmployee, getRoleData, getMgrData} = require('./sqlFunctions.js');
 
-const interface = () => {
+const mainMenu = () => {
     prompt([
         {
             type: 'list',
-            message: `\n\nWhat would you like to do?\n\n`,
+            message: `What would you like to do?`,
             name: 'dbTask',
             choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Exit']
         }
@@ -29,15 +29,14 @@ const interface = () => {
                     addRoleInfo();
                     break;
                 case 'Add an employee':
-                    console.log(`\nYou would like to add an employee.\n`);
-                    
+                    addEmployeeInfo();
                     break;
                 case 'Update an employee role':
-                    console.log(`\nYou would like to update an employee role.\n`);
+                    console.log(`You would like to update an employee role.`);
                     
                     break;
                 case 'Exit':
-                    console.log(`\nGoodbye!\n`);
+                    console.log(`Goodbye!`);
                     process.exit(0);
             }
         })
@@ -47,7 +46,7 @@ const addDeptInfo = () => {
     prompt([
         {
             type: 'input',
-            message: `\n\nPlease enter the name of the new department:\n\n`,
+            message: `Please enter the name of the new department:`,
             name: 'deptName'
         }
     ])
@@ -63,17 +62,17 @@ const addRoleInfo = async () => {
         const response = await prompt([
             {
                 type: 'input',
-                message: `\n\nPlease enter the name of the new role:`,
+                message: `Please enter the name of the new role:`,
                 name: 'roleName'
             },
             {
                 type: 'input',
-                message: `\n\nPlease enter the salary for the new role:`,
+                message: `Please enter the salary for the new role:`,
                 name: 'roleSalary'
             },
             {
                 type: 'list',
-                message: `\n\nPlease choose the department of the new role:`,
+                message: `Please choose the department of the new role:`,
                 name: 'roleDept',
                 choices: deptChoices
             },
@@ -85,4 +84,40 @@ const addRoleInfo = async () => {
     }
 }
 
-module.exports = interface;
+const addEmployeeInfo = async () => {
+    try {
+        const roleChoices = await getRoleData();
+        const mgrChoices = await getMgrData();
+        
+        const response = await prompt([
+            {
+                type: 'input',
+                message: `Please enter the first name of the new employee:`,
+                name: 'first_name'
+            },
+            {
+                type: 'input',
+                message: `Please enter the last name of the new employee:`,
+                name: 'last_name'
+            },
+            {
+                type: 'list',
+                message: `Please choose the new employee's role:`,
+                name: 'role',
+                choices: roleChoices
+            },
+            {
+                type: 'list',
+                message: `Please choose the new employee's manager:`,
+                name: 'manager',
+                choices: mgrChoices
+            },
+        ]);
+
+        addEmployee(response.first_name, response.last_name, response.role, response.manager);
+    } catch (error) {
+        console.error('Error adding employee:', error);
+    }
+}
+
+module.exports = mainMenu;

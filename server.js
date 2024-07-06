@@ -1,5 +1,5 @@
 const express = require('express');
-const interface = require('./prompts.js');
+const mainMenu = require('./prompts.js');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -18,4 +18,4 @@ app.listen(PORT, () => {
 });
 
 //Call function to begin application
-interface();
+mainMenu();
