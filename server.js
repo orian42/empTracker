@@ -4,6 +4,8 @@ const mainMenu = require('./prompts.js');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
+console.clear;
+
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -14,7 +16,7 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`\n\nServer running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
 
 //Call function to begin application

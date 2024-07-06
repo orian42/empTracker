@@ -1,5 +1,14 @@
 const { prompt } = require('inquirer');
-const {viewDept, viewRoles, viewEmp, addDept, addRole, getDeptData, addEmployee, getRoleData, getMgrData} = require('./sqlFunctions.js');
+const { viewDept,
+    viewRoles,
+    viewEmp,
+    addDept,
+    addRole,
+    getDeptData,
+    addEmployee,
+    getRoleData,
+    getEmpData,
+    updateEmployee } = require('./sqlFunctions.js');
 
 const mainMenu = () => {
     prompt([
@@ -17,7 +26,7 @@ const mainMenu = () => {
                     viewDept();
                     break;
                 case 'View all roles':
-                    viewRoles();                    
+                    viewRoles();
                     break;
                 case 'View all employees':
                     viewEmp();
@@ -32,8 +41,7 @@ const mainMenu = () => {
                     addEmployeeInfo();
                     break;
                 case 'Update an employee role':
-                    console.log(`You would like to update an employee role.`);
-                    
+                    updateEmployeeInfo();
                     break;
                 case 'Exit':
                     console.log(`Goodbye!`);
@@ -50,15 +58,15 @@ const addDeptInfo = () => {
             name: 'deptName'
         }
     ])
-    .then((response) => {
-        addDept(response.deptName);
-    })
+        .then((response) => {
+            addDept(response.deptName);
+        })
 }
 
 const addRoleInfo = async () => {
     try {
         const deptChoices = await getDeptData();
-        
+
         const response = await prompt([
             {
                 type: 'input',
@@ -87,8 +95,8 @@ const addRoleInfo = async () => {
 const addEmployeeInfo = async () => {
     try {
         const roleChoices = await getRoleData();
-        const mgrChoices = await getMgrData();
-        
+        const mgrChoices = await getEmpData();
+
         const response = await prompt([
             {
                 type: 'input',
@@ -117,6 +125,32 @@ const addEmployeeInfo = async () => {
         addEmployee(response.first_name, response.last_name, response.role, response.manager);
     } catch (error) {
         console.error('Error adding employee:', error);
+    }
+}
+
+const updateEmployeeInfo = async () => {
+    try {
+        const roleChoices = await getRoleData();
+        const empChoices = await getEmpData();
+
+        const response = await prompt([
+            {
+                type: 'list',
+                message: `Please choose the employee to update:`,
+                name: 'employee',
+                choices: empChoices
+            },
+            {
+                type: 'list',
+                message: `Please choose the employee's new role:`,
+                name: 'role',
+                choices: roleChoices
+            },
+        ]);
+
+        updateEmployee(response.employee, response.role);
+    } catch (error) {
+        console.error('Error updating employee:', error);
     }
 }
 
