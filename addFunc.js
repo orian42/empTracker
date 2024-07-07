@@ -1,54 +1,18 @@
 const { prompt } = require('inquirer');
-const { viewDept,
-    viewRoles,
-    viewEmp,
-    addDept,
-    addRole,
-    getDeptData,
-    addEmployee,
-    getRoleData,
-    getEmpData,
-    updateEmployee } = require('./sqlFunctions.js');
+const { Pool } = require('pg');
+const { getDeptData, getRoleData, getEmpData } = require('./choicesLists.js');
 
-const mainMenu = () => {
-    prompt([
-        {
-            type: 'list',
-            message: `What would you like to do?`,
-            name: 'dbTask',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Exit']
-        }
-    ])
-        .then((response) => {
-            let dbTask = response.dbTask;
-            switch (dbTask) {
-                case 'View all departments':
-                    viewDept();
-                    break;
-                case 'View all roles':
-                    viewRoles();
-                    break;
-                case 'View all employees':
-                    viewEmp();
-                    break;
-                case 'Add a department':
-                    addDeptInfo();
-                    break;
-                case 'Add a role':
-                    addRoleInfo();
-                    break;
-                case 'Add an employee':
-                    addEmployeeInfo();
-                    break;
-                case 'Update an employee role':
-                    updateEmployeeInfo();
-                    break;
-                case 'Exit':
-                    console.log(`Goodbye!`);
-                    process.exit(0);
-            }
-        })
-}
+const pool = new Pool(
+    {
+        user: 'postgres',
+        password: '12345',
+        host: 'localhost',
+        database: 'business'
+    },
+    console.log('Connected to the business database!')
+)
+
+pool.connect();
 
 const addDeptInfo = () => {
     prompt([
@@ -61,6 +25,11 @@ const addDeptInfo = () => {
         .then((response) => {
             addDept(response.deptName);
         })
+}
+
+const addDept = async (name) => {
+    pool.query('INSERT INTO departments(name) VALUES($1) RETURNING *', [name]);
+    console.log('Department successfully added to the database!');
 }
 
 const addRoleInfo = async () => {
@@ -90,6 +59,11 @@ const addRoleInfo = async () => {
     } catch (error) {
         console.error('Error adding role:', error);
     }
+}
+
+const addRole = async (name, salary, dept) => {
+    pool.query('INSERT INTO roles(title, salary, dept_id) VALUES($1, $2, $3) RETURNING *', [name, salary, dept]);
+    console.log('Role successfully added to the database!');
 }
 
 const addEmployeeInfo = async () => {
@@ -128,30 +102,19 @@ const addEmployeeInfo = async () => {
     }
 }
 
-const updateEmployeeInfo = async () => {
-    try {
-        const roleChoices = await getRoleData();
-        const empChoices = await getEmpData();
-
-        const response = await prompt([
-            {
-                type: 'list',
-                message: `Please choose the employee to update:`,
-                name: 'employee',
-                choices: empChoices
-            },
-            {
-                type: 'list',
-                message: `Please choose the employee's new role:`,
-                name: 'role',
-                choices: roleChoices
-            },
-        ]);
-
-        updateEmployee(response.employee, response.role);
-    } catch (error) {
-        console.error('Error updating employee:', error);
-    }
+const addEmployee = async (first_name, last_name, role, manager) => {
+    pool.query(`
+        INSERT INTO 
+            employees(first_name, last_name, role_id, manager_id) 
+        VALUES
+            ($1, $2, $3, $4) 
+        RETURNING *
+        `, [first_name, last_name, role, manager]);
+    console.log('Employee successfully added to the database!');
 }
 
-module.exports = mainMenu;
+module.exports = {
+    addDeptInfo,
+    addRoleInfo,
+    addEmployeeInfo
+};

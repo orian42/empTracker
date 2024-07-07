@@ -1,5 +1,5 @@
 const express = require('express');
-const mainMenu = require('./prompts.js');
+const { title, mainMenu } = require('./index.js');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -17,7 +17,6 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    title();  
+    mainMenu();//Call function to begin application
 });
-
-//Call function to begin application
-mainMenu();
