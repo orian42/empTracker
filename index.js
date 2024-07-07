@@ -1,12 +1,7 @@
 const { prompt } = require('inquirer');
-const {
-    getDeptData,
-    getRoleData,
-    getEmpData,
-    updateEmployee } = require('./choicesLists.js');
-    const { viewDept, viewRoles, viewEmp } = require('./viewFunc.js');
-    const { addDeptInfo, addRoleInfo, addEmployeeInfo } = require('./addFunc.js');
-    const { updateEmployeeInfo } = require('./updateFunc.js');
+const { viewDept, viewRoles, viewEmp, viewEmpByMgr, viewEmpByDept } = require('./viewFunc.js');
+const { addDeptInfo, addRoleInfo, addEmployeeInfo } = require('./addFunc.js');
+const { updateEmployeeInfo } = require('./updateFunc.js');
 
 const blank = '\n'.repeat(process.stdout.rows);
 console.log(blank);
@@ -37,7 +32,7 @@ const mainMenu = () => {
             type: 'list',
             message: `What would you like to do?`,
             name: 'dbTask',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Exit']
+            choices: ['View all departments', 'View all roles', 'View all employees', 'View employees by manager', 'View employees by department', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Exit']
         }
     ])
         .then((response) => {
@@ -53,6 +48,12 @@ const mainMenu = () => {
                     break;
                 case 'View all employees':
                     viewEmp();
+                    break;
+                case 'View employees by manager':
+                    viewEmpByMgr();
+                    break;
+                case 'View employees by department':
+                    viewEmpByDept();
                     break;
                 case 'Add a department':
                     addDeptInfo();
@@ -71,32 +72,6 @@ const mainMenu = () => {
             }
         })
 }
-
-// const updateEmployeeInfo = async () => {
-//     try {
-//         const roleChoices = await getRoleData();
-//         const empChoices = await getEmpData();
-
-//         const response = await prompt([
-//             {
-//                 type: 'list',
-//                 message: `Please choose the employee to update:`,
-//                 name: 'employee',
-//                 choices: empChoices
-//             },
-//             {
-//                 type: 'list',
-//                 message: `Please choose the employee's new role:`,
-//                 name: 'role',
-//                 choices: roleChoices
-//             },
-//         ]);
-
-//         updateEmployee(response.employee, response.role);
-//     } catch (error) {
-//         console.error('Error updating employee:', error);
-//     }
-// }
 
 module.exports = {
     title,
