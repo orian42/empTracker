@@ -1,3 +1,7 @@
+//This file contains queries to populate the inquirer prompt options in the prompts.js file
+//Note that the name and value properties are defines to allow the user to set the property
+//by name but the database is actually populated with a number value
+
 const { Pool } = require('pg');
 
 const pool = new Pool(
@@ -12,9 +16,11 @@ const pool = new Pool(
 
 pool.connect();
 
+//Department data list
+//id 0 in this table is an unassigned department which will come into play during a delete query
 const getDeptData = async () => {
     try {
-        const { rows } = await pool.query('SELECT name, id FROM departments WHERE id > 0 ORDER BY name');
+        const { rows } = await pool.query('SELECT name, id FROM departments WHERE id > 0 ORDER BY name'); //<---Note that id 0 will not be shown
         const data = rows.map(row => ({
             name: row.name,
             value: row.id,
@@ -26,9 +32,11 @@ const getDeptData = async () => {
     }
 }
 
+//Role data list
+//id 0 in this table is an unassigned role which will come into play during a delete query
 const getRoleData = async () => {
     try {
-        const { rows } = await pool.query('SELECT title, id FROM roles WHERE id > 0 ORDER BY title');
+        const { rows } = await pool.query('SELECT title, id FROM roles WHERE id > 0 ORDER BY title'); //<---Note that id 0 will not be shown
         const data = rows.map(row => ({
             name: row.title,
             value: row.id,
@@ -40,6 +48,7 @@ const getRoleData = async () => {
     }
 }
 
+//Employee data list
 const getEmpData = async () => {
     try {
         const { rows } = await pool.query(`SELECT CONCAT(first_name, ' ', last_name) AS manager, id FROM employees ORDER BY manager`);

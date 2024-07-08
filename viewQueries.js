@@ -12,6 +12,8 @@ const pool = new Pool(
 
 pool.connect();
 
+//This query displays all information in the departments table 
+//except id 0 which is designated as unassigned
 const viewDept = async () => {
     pool.query(`
         SELECT 
@@ -25,6 +27,8 @@ const viewDept = async () => {
     });
 }
 
+//This query displays all information in the roles table joined with the departments table
+//except the role with id 0 which is designated as unassigned
 const viewRoles = async () => {
     pool.query(`
         SELECT 
@@ -41,6 +45,7 @@ const viewRoles = async () => {
     });
 }
 
+//This query displays all information in the employees table joined with the departments and roles tables
 const viewEmp = async () => {
     pool.query(`
         SELECT 
@@ -61,6 +66,8 @@ const viewEmp = async () => {
     });
 }
 
+//This query displays information in the employees table joined with the departments and roles tables
+//for employees assigned to the user-selected manager
 const empByMgrData = async (mgr_id) => {
     console.log(mgr_id);
     pool.query(`
@@ -83,6 +90,8 @@ const empByMgrData = async (mgr_id) => {
     });
 }
 
+//This query displays information in the employees table joined with the departments and roles tables
+//for employees assigned to the user-selected department
 const empByDeptData = async (dept_id) => {
     pool.query(`
         SELECT 
@@ -104,6 +113,7 @@ const empByDeptData = async (dept_id) => {
     });
 }
 
+//This query finds the sum of all salaries from a user-selected department
 const viewBudget = async (dept_id) => {
     pool.query(`
         SELECT SUM(roles.salary) AS total_salary

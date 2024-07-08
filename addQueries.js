@@ -12,16 +12,19 @@ const pool = new Pool(
 
 pool.connect();
 
+//Adds a new department to the departments table
 const addDept = async (name) => {
     pool.query('INSERT INTO departments(name) VALUES($1) RETURNING *', [name]);
     console.log('Department successfully added to the database!');
 }
 
+//Adds a new role to the roles table
 const addRole = async (name, salary, dept) => {
     pool.query('INSERT INTO roles(title, salary, dept_id) VALUES($1, $2, $3) RETURNING *', [name, salary, dept]);
     console.log('Role successfully added to the database!');
 }
 
+//Adds a new employee to the employees table
 const addEmployee = async (first_name, last_name, role, manager) => {
     pool.query(`
         INSERT INTO 

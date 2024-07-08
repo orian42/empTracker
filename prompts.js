@@ -1,3 +1,6 @@
+//This file contains all of the inquirer prompt functions
+
+//Dependencies for this file
 const { prompt } = require('inquirer');
 const { viewDept, viewRoles, viewEmp, empByMgrData, empByDeptData, viewBudget } = require('./viewQueries.js');
 const { addDept, addRole, addEmployee } = require('./addQueries.js');
@@ -5,9 +8,11 @@ const { updateEmployee } = require('./updateQueries.js');
 const { deleteDeptData, deleteRolesData, deleteEmpData } = require('./deleteQueries.js');
 const { getEmpData, getDeptData, getRoleData } = require('./choicesLists.js');
 
+//Clears the console prior to beginning the application
 const blank = '\n'.repeat(process.stdout.rows);
 console.log(blank);
 
+//Generates the title of the app
 const title = () => {
     console.clear();
     console.log(`
@@ -28,6 +33,8 @@ const title = () => {
   \n\n`);
 }
 
+//This is the main menu of the app.  There are many options and 
+//a switch method directs the flow of the app.
 const mainMenu = () => {
     prompt([
         {
@@ -41,6 +48,7 @@ const mainMenu = () => {
             let dbTask = response.dbTask;
             console.clear();
             title();
+            //The user-selected option drives what function will be called
             switch (dbTask) {
                 case 'View all departments':
                     viewDept().then(menuTimeout());
@@ -88,12 +96,14 @@ const mainMenu = () => {
         })
 }
 
+//This function creates a 1/4 second wait before re-running the main menu
 let menuTimeout = () => {
     setTimeout(() => {
         mainMenu();
     }, 250);
 }
 
+//This function allows the user to view the employees of a selected manager
 const viewEmpByMgr = async () => {
     try {
         const empChoices = await getEmpData();
@@ -106,13 +116,14 @@ const viewEmpByMgr = async () => {
                 choices: empChoices
             },
         ]);
-
+        //The query is called from the viewQueries.js file
         empByMgrData(response.selMgr).then(menuTimeout());
     } catch (error) {
         console.error('Error viewing employee by manager:', error);
     }
 }
 
+//This function allows the user to view employees assigned to
 const viewEmpByDept = async () => {
     try {
         const deptChoices = await getDeptData();
@@ -125,13 +136,15 @@ const viewEmpByDept = async () => {
                 choices: deptChoices
             },
         ]);
-
+        //The query is called from the viewQueries.js file
         empByDeptData(response.selDept).then(menuTimeout());
     } catch (error) {
         console.error('Error viewing employee by manager:', error);
     }
 }
 
+//This function allows the user to select a department 
+//and view the sum of the salaries paid out
 const viewBudgetInfo = async () => {
     try {
         const deptChoices = await getDeptData();
@@ -144,13 +157,14 @@ const viewBudgetInfo = async () => {
                 choices: deptChoices
             },
         ]);
-
+        //The query is called from the viewQueries.js file
         viewBudget(response.selDeptBudget).then(menuTimeout());
     } catch (error) {
         console.error('Error viewing departmental budget:', error);
     }
 }
 
+//This function allows the user to add a department
 const addDeptInfo = () => {
     prompt([
         {
@@ -160,10 +174,12 @@ const addDeptInfo = () => {
         }
     ])
         .then((response) => {
+            //The query is called from the addQueries.js file
             addDept(response.deptName).then(menuTimeout());
         })
 }
 
+//This function allows the user to add a role
 const addRoleInfo = async () => {
     try {
         const deptChoices = await getDeptData();
@@ -186,13 +202,14 @@ const addRoleInfo = async () => {
                 choices: deptChoices
             },
         ]);
-
+        //The query is called from the addQueries.js file
         addRole(response.roleName, response.roleSalary, response.roleDept).then(menuTimeout());
     } catch (error) {
         console.error('Error adding role:', error);
     }
 }
 
+//This function allows the user to add an employee
 const addEmployeeInfo = async () => {
     try {
         const roleChoices = await getRoleData();
@@ -222,13 +239,14 @@ const addEmployeeInfo = async () => {
                 choices: mgrChoices
             },
         ]);
-
+        //The query is called from the addQueries.js file
         addEmployee(response.first_name, response.last_name, response.role, response.manager).then(menuTimeout());
     } catch (error) {
         console.error('Error adding employee:', error);
     }
 }
 
+//This function allows the user to update an employee's role
 const updateEmployeeInfo = async () => {
     try {
         const roleChoices = await getRoleData();
@@ -248,13 +266,14 @@ const updateEmployeeInfo = async () => {
                 choices: roleChoices
             },
         ]);
-
+        //The query is called from the updateQueries.js file
         updateEmployee(response.employee, response.role).then(menuTimeout());
     } catch (error) {
         console.error('Error updating employee:', error);
     }
 }
 
+//This function allows the user to delete a department
 const deleteDeptInfo = async () => {
     try {
         const deptChoices = await getDeptData();
@@ -267,13 +286,14 @@ const deleteDeptInfo = async () => {
                 choices: deptChoices
             },
         ]);
-
+        //The query is called from the deleteQueries.js file
         deleteDeptData(response.selDept).then(menuTimeout());
     } catch (error) {
         console.error('Error deleting department:', error);
     }
 }
 
+//This function allows the user to delete a role
 const deleteRoleInfo = async () => {
     try {
         const roleChoices = await getRoleData();
@@ -286,13 +306,14 @@ const deleteRoleInfo = async () => {
                 choices: roleChoices
             },
         ]);
-
+        //The query is called from the deleteQueries.js file
         deleteRolesData(response.selRole).then(menuTimeout());
     } catch (error) {
         console.error('Error deleting role:', error);
     }
 }
 
+//This function allows the user to delete an employee
 const deleteEmployeeInfo = async () => {
     try {
         const empChoices = await getEmpData();
@@ -305,7 +326,7 @@ const deleteEmployeeInfo = async () => {
                 choices: empChoices
             },
         ]);
-
+        //The query is called from the deleteQueries.js file
         deleteEmpData(response.selEmp).then(menuTimeout());
     } catch (error) {
         console.error('Error deleting employee:', error);
