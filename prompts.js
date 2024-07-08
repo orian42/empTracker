@@ -1,9 +1,9 @@
 const { prompt } = require('inquirer');
-const { viewDept, viewRoles, viewEmp, empByMgrData, empByDeptData } = require('./viewQueries.js');
+const { viewDept, viewRoles, viewEmp, empByMgrData, empByDeptData, viewBudget } = require('./viewQueries.js');
 const { addDept, addRole, addEmployee } = require('./addQueries.js');
 const { updateEmployee } = require('./updateQueries.js');
 const { deleteDeptData, deleteRolesData, deleteEmpData } = require('./deleteQueries.js');
-const { getEmpData, getDeptData, getRoleData } = require('./choicesLists');
+const { getEmpData, getDeptData, getRoleData } = require('./choicesLists.js');
 
 const blank = '\n'.repeat(process.stdout.rows);
 console.log(blank);
@@ -34,7 +34,7 @@ const mainMenu = () => {
             type: 'list',
             message: `What would you like to do?`,
             name: 'dbTask',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'View employees by manager', 'View employees by department', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Delete a department', 'Delete a role', 'Delete an employee', 'Exit']
+            choices: ['View all departments', 'View all roles', 'View all employees', 'View employees by manager', 'View employees by department', 'View the total utilized budget of a department', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Delete a department', 'Delete a role', 'Delete an employee', 'Exit']
         }
     ])
         .then((response) => {
@@ -56,6 +56,9 @@ const mainMenu = () => {
                     break;
                 case 'View employees by department':
                     viewEmpByDept();
+                    break;
+                case 'View the total utilized budget of a department':
+                    viewBudgetInfo();
                     break;
                 case 'Add a department':
                     addDeptInfo();
@@ -126,6 +129,25 @@ const viewEmpByDept = async () => {
         empByDeptData(response.selDept).then(menuTimeout());
     } catch (error) {
         console.error('Error viewing employee by manager:', error);
+    }
+}
+
+const viewBudgetInfo = async () => {
+    try {
+        const deptChoices = await getDeptData();
+
+        const response = await prompt([
+            {
+                type: 'list',
+                message: `Select department to view the total utilized budget:`,
+                name: 'selDeptBudget',
+                choices: deptChoices
+            },
+        ]);
+
+        viewBudget(response.selDeptBudget).then(menuTimeout());
+    } catch (error) {
+        console.error('Error viewing departmental budget:', error);
     }
 }
 

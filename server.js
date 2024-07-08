@@ -1,5 +1,5 @@
 const express = require('express');
-const { title, mainMenu } = require('./index.js');
+const { title, mainMenu } = require('./prompts.js');
 
 const PORT = process.env.PORT || 3001;
 const app = express();

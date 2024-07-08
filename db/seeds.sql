@@ -8,7 +8,7 @@ INSERT INTO departments (id, name) VALUES
 
 --Seeds for roles table
 INSERT INTO roles (id, title, salary, dept_id) VALUES
-(0, 'Unassigned'),
+(0, 'Unassigned', 0, 0),
 (1, 'Salesperson', 80000, 1),
 (2, 'Lead Engineer', 150000, 2),
 (3, 'Software Engineer', 120000, 2),
@@ -19,10 +19,10 @@ INSERT INTO roles (id, title, salary, dept_id) VALUES
 
 --Seeds for employees table
 INSERT INTO employees (id, first_name, last_name, role_id, manager_id) VALUES
-(1, 'Mike', 'Chan', 101, 1002),
-(2, 'Ashley', 'Rodriguez', 102, null), 
-(3, 'Kevin', 'Tupik', 103, 1002),
-(4, 'Kunal', 'Singh', 104, null),
-(5, 'Malia', 'Brown', 105, 1004),
-(6, 'Sarah', 'Lourde', 106, null),
-(7, 'Tom', 'Allen', 107, 1006);
+(1, 'Mike', 'Chan', 1, 2),
+(2, 'Ashley', 'Rodriguez', 2, null), 
+(3, 'Kevin', 'Tupik', 3, 2),
+(4, 'Kunal', 'Singh', 4, null),
+(5, 'Malia', 'Brown', 5, 4),
+(6, 'Sarah', 'Lourde', 6, null),
+(7, 'Tom', 'Allen', 7, 6);

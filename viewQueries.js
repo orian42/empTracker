@@ -18,6 +18,7 @@ const viewDept = async () => {
             name AS "Department Name", 
             id AS "Department ID" 
         FROM departments 
+        WHERE id > 0
         ORDER BY name
         `, function (err, { rows }) {
         console.table(rows);
@@ -33,6 +34,7 @@ const viewRoles = async () => {
             roles.salary AS "Salary" 
         FROM roles
         JOIN departments ON roles.dept_id = departments.id 
+                WHERE roles.id > 0
         ORDER BY "Job Title"
         `, function (err, { rows }) {
         console.table(rows);
@@ -102,10 +104,24 @@ const empByDeptData = async (dept_id) => {
     });
 }
 
+const viewBudget = async (dept_id) => {
+    pool.query(`
+        SELECT SUM(roles.salary) AS total_salary
+        FROM employees
+        JOIN roles ON employees.role_id = roles.id 
+        JOIN departments ON roles.dept_id = departments.id
+        WHERE departments.id = $1;
+    `, [dept_id], function (err, res) {
+        const totalSalary = res.rows[0].total_salary;
+        console.log(`The total utilized budget for this department is $${totalSalary}.`);
+    });
+}
+
 module.exports = {
     viewDept,
     viewRoles,
     viewEmp,
     empByMgrData,
-    empByDeptData
+    empByDeptData, 
+    viewBudget
 }
