@@ -2,11 +2,11 @@
 
 //Dependencies for this file
 const { prompt } = require('inquirer');
-const { viewDept, viewRoles, viewEmp, empByMgrData, empByDeptData, viewBudget } = require('./viewQueries.js');
-const { addDept, addRole, addEmployee } = require('./addQueries.js');
-const { updateEmployee, updateManager } = require('./updateQueries.js');
-const { deleteDeptData, deleteRolesData, deleteEmpData } = require('./deleteQueries.js');
-const { getEmpData, getDeptData, getRoleData } = require('./choicesLists.js');
+const { viewDept, viewRoles, viewEmp, empByMgrData, empByDeptData, viewBudget } = require('./queries/viewQueries.js');
+const { addDept, addRole, addEmployee } = require('./queries/addQueries.js');
+const { updateEmployee, updateManager } = require('./queries/updateQueries.js');
+const { deleteDeptData, deleteRolesData, deleteEmpData } = require('./queries/deleteQueries.js');
+const { getEmpData, getDeptData, getRoleData } = require('./queries/choicesLists.js');
 
 //Clears the console prior to beginning the application
 const blank = '\n'.repeat(process.stdout.rows);

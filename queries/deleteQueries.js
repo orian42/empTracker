@@ -16,7 +16,7 @@ pool.connect();
 const deleteDeptData = async (dept_id) => {
     //The first thing that occurs is any roles assigned to the department being deleted are assigned to the 
     //department with id 0 which is designated as unassigned.  The department with id 0 cannot be deleted.
-    pool.query('UPDATE roles SET dept_id = 0 WHERE dept_id = $1', [dept_id]);
+    await pool.query('UPDATE roles SET dept_id = 0 WHERE dept_id = $1', [dept_id]);
     pool.query(`DELETE FROM departments WHERE id = $1`, [dept_id]);
     console.log('Department successfully deleted.  Some roles may need to be reassigned to other departments.');
     
@@ -26,7 +26,7 @@ const deleteDeptData = async (dept_id) => {
 const deleteRolesData = async (role_id) => {
     //The first thing that occurs is any employees assigned to the role being deleted are assigned to the 
     //role with id 0 which is designated as unassigned.  The role with id 0 cannot be deleted.
-    pool.query('UPDATE employees SET role_id = 0 WHERE role_id = $1', [role_id]);
+    await pool.query('UPDATE employees SET role_id = 0 WHERE role_id = $1', [role_id]);
     pool.query(`DELETE FROM roles WHERE id = $1`, [role_id]);
     console.log('Role successfully deleted.  Some employees may need to be reassigned to other departments.');
 }
