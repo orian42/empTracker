@@ -14,7 +14,7 @@ pool.connect();
 
 const getDeptData = async () => {
     try {
-        const { rows } = await pool.query('SELECT name, id FROM departments ORDER BY name');
+        const { rows } = await pool.query('SELECT name, id FROM departments WHERE id > 0 ORDER BY name');
         const data = rows.map(row => ({
             name: row.name,
             value: row.id,
@@ -28,7 +28,7 @@ const getDeptData = async () => {
 
 const getRoleData = async () => {
     try {
-        const { rows } = await pool.query('SELECT title, id FROM roles ORDER BY title');
+        const { rows } = await pool.query('SELECT title, id FROM roles WHERE id > 0 ORDER BY title');
         const data = rows.map(row => ({
             name: row.title,
             value: row.id,

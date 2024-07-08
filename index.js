@@ -2,6 +2,7 @@ const { prompt } = require('inquirer');
 const { viewDept, viewRoles, viewEmp, empByMgrData, empByDeptData } = require('./viewQueries.js');
 const { addDept, addRole, addEmployee } = require('./addQueries.js');
 const { updateEmployee } = require('./updateQueries.js');
+const { deleteDeptData, deleteRolesData, deleteEmpData } = require('./deleteQueries.js');
 const { getEmpData, getDeptData, getRoleData } = require('./choicesLists');
 
 const blank = '\n'.repeat(process.stdout.rows);
@@ -33,7 +34,7 @@ const mainMenu = () => {
             type: 'list',
             message: `What would you like to do?`,
             name: 'dbTask',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'View employees by manager', 'View employees by department', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Exit']
+            choices: ['View all departments', 'View all roles', 'View all employees', 'View employees by manager', 'View employees by department', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Delete a department', 'Delete a role', 'Delete an employee', 'Exit']
         }
     ])
         .then((response) => {
@@ -68,6 +69,15 @@ const mainMenu = () => {
                 case 'Update an employee role':
                     updateEmployeeInfo();
                     break;
+                case 'Delete a department':
+                    deleteDeptInfo();
+                    break;
+                case 'Delete a role':
+                    deleteRoleInfo();
+                    break;
+                case 'Delete an employee':
+                    deleteEmployeeInfo();
+                    break;
                 case 'Exit':
                     console.log(`Goodbye!`);
                     process.exit();
@@ -86,7 +96,7 @@ const viewEmpByMgr = async () => {
         const empChoices = await getEmpData();
 
         const response = await prompt([
-        {
+            {
                 type: 'list',
                 message: `Select manager to view their employees:`,
                 name: 'selMgr',
@@ -105,7 +115,7 @@ const viewEmpByDept = async () => {
         const deptChoices = await getDeptData();
 
         const response = await prompt([
-        {
+            {
                 type: 'list',
                 message: `Select department to view assigned employees:`,
                 name: 'selDept',
@@ -220,6 +230,63 @@ const updateEmployeeInfo = async () => {
         updateEmployee(response.employee, response.role).then(menuTimeout());
     } catch (error) {
         console.error('Error updating employee:', error);
+    }
+}
+
+const deleteDeptInfo = async () => {
+    try {
+        const deptChoices = await getDeptData();
+
+        const response = await prompt([
+            {
+                type: 'list',
+                message: `Select department to delete`,
+                name: 'selDept',
+                choices: deptChoices
+            },
+        ]);
+
+        deleteDeptData(response.selDept).then(menuTimeout());
+    } catch (error) {
+        console.error('Error deleting department:', error);
+    }
+}
+
+const deleteRoleInfo = async () => {
+    try {
+        const roleChoices = await getRoleData();
+
+        const response = await prompt([
+            {
+                type: 'list',
+                message: `Select role to delete`,
+                name: 'selRole',
+                choices: roleChoices
+            },
+        ]);
+
+        deleteRolesData(response.selRole).then(menuTimeout());
+    } catch (error) {
+        console.error('Error deleting role:', error);
+    }
+}
+
+const deleteEmployeeInfo = async () => {
+    try {
+        const empChoices = await getEmpData();
+
+        const response = await prompt([
+            {
+                type: 'list',
+                message: `Select employee to delete`,
+                name: 'selEmp',
+                choices: empChoices
+            },
+        ]);
+
+        deleteEmpData(response.selEmp).then(menuTimeout());
+    } catch (error) {
+        console.error('Error deleting employee:', error);
     }
 }
 
