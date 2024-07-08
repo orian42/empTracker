@@ -1,6 +1,4 @@
 const { Pool } = require('pg');
-const { prompt } = require('inquirer');
-const { getEmpData, getDeptData } = require('./choicesLists');
 
 const pool = new Pool(
     {
@@ -61,25 +59,6 @@ const viewEmp = async () => {
     });
 }
 
-const viewEmpByMgr = async () => {
-    try {
-        const empChoices = await getEmpData();
-
-        const response = await prompt([
-        {
-                type: 'list',
-                message: `Select manager to view their employees:`,
-                name: 'selMgr',
-                choices: empChoices
-            },
-        ]);
-
-        empByMgrData(response.selMgr);
-    } catch (error) {
-        console.error('Error viewing employee by manager:', error);
-    }
-}
-
 const empByMgrData = async (mgr_id) => {
     console.log(mgr_id);
     pool.query(`
@@ -100,25 +79,6 @@ const empByMgrData = async (mgr_id) => {
         `, [mgr_id], function (err, { rows }) {
         console.table(rows);
     });
-}
-
-const viewEmpByDept = async () => {
-    try {
-        const deptChoices = await getDeptData();
-
-        const response = await prompt([
-        {
-                type: 'list',
-                message: `Select department to view assigned employees:`,
-                name: 'selDept',
-                choices: deptChoices
-            },
-        ]);
-
-        empByDeptData(response.selDept);
-    } catch (error) {
-        console.error('Error viewing employee by manager:', error);
-    }
 }
 
 const empByDeptData = async (dept_id) => {
@@ -146,6 +106,6 @@ module.exports = {
     viewDept,
     viewRoles,
     viewEmp,
-    viewEmpByMgr,
-    viewEmpByDept
+    empByMgrData,
+    empByDeptData
 }
