@@ -4,7 +4,7 @@
 const { prompt } = require('inquirer');
 const { viewDept, viewRoles, viewEmp, empByMgrData, empByDeptData, viewBudget } = require('./viewQueries.js');
 const { addDept, addRole, addEmployee } = require('./addQueries.js');
-const { updateEmployee } = require('./updateQueries.js');
+const { updateEmployee, updateManager } = require('./updateQueries.js');
 const { deleteDeptData, deleteRolesData, deleteEmpData } = require('./deleteQueries.js');
 const { getEmpData, getDeptData, getRoleData } = require('./choicesLists.js');
 
@@ -41,7 +41,7 @@ const mainMenu = () => {
             type: 'list',
             message: `What would you like to do?`,
             name: 'dbTask',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'View employees by manager', 'View employees by department', 'View the total utilized budget of a department', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Delete a department', 'Delete a role', 'Delete an employee', 'Exit']
+            choices: ['View all departments', 'View all roles', 'View all employees', 'View employees by manager', 'View employees by department', 'View the total utilized budget of a department', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Update an employee manager', 'Delete a department', 'Delete a role', 'Delete an employee', 'Exit']
         }
     ])
         .then((response) => {
@@ -79,6 +79,9 @@ const mainMenu = () => {
                     break;
                 case 'Update an employee role':
                     updateEmployeeInfo();
+                    break;
+                case 'Update an employee manager':
+                    updateManagerInfo();
                     break;
                 case 'Delete a department':
                     deleteDeptInfo();
@@ -270,6 +273,32 @@ const updateEmployeeInfo = async () => {
         updateEmployee(response.employee, response.role).then(menuTimeout());
     } catch (error) {
         console.error('Error updating employee:', error);
+    }
+}
+
+//This function allows the user to update an employee's manager
+const updateManagerInfo = async () => {
+    try {
+        const empChoices = await getEmpData();
+
+        const response = await prompt([
+            {
+                type: 'list',
+                message: `Please choose the employee to update:`,
+                name: 'employee',
+                choices: empChoices
+            },
+            {
+                type: 'list',
+                message: `Please choose a manger for this employee:`,
+                name: 'manager',
+                choices: empChoices
+            },
+        ]);
+        //The query is called from the updateQueries.js file
+        updateManager(response.employee, response.manager).then(menuTimeout());
+    } catch (error) {
+        console.error('Error updating manager:', error);
     }
 }
 

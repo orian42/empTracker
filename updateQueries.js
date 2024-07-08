@@ -18,6 +18,13 @@ const updateEmployee = async (employee, role) => {
     console.log('Employee was successfully updated with the new role!');
 }
 
+//Updates an employee with a selected new manager
+const updateManager = async (employee, manager) => {
+    pool.query('UPDATE employees SET manager_id = $2 WHERE id = $1', [employee, manager]);
+    console.log('Employee was successfully updated with the new manager!');
+}
+
 module.exports = {
-    updateEmployee
+    updateEmployee,
+    updateManager
 };

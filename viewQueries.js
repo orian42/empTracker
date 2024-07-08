@@ -52,9 +52,9 @@ const viewEmp = async () => {
             employees.id AS "Employee ID", 
             employees.first_name AS "First Name", 
             employees.last_name AS "Last Name", 
-            roles.title AS "Title",
-            roles.salary AS "Salary",
+            roles.title AS "Job Title",
             departments.name AS "Department",
+            roles.salary AS "Salary",
             CONCAT(B.first_name, ' ', B.last_name) AS "Manager"
         FROM employees
         JOIN roles ON employees.role_id = roles.id 
@@ -76,8 +76,8 @@ const empByMgrData = async (mgr_id) => {
             employees.first_name AS "First Name", 
             employees.last_name AS "Last Name", 
             roles.title AS "Title",
-            roles.salary AS "Salary",
             departments.name AS "Department",
+            roles.salary AS "Salary",
             CONCAT(B.first_name, ' ', B.last_name) AS "Manager"
         FROM employees
         JOIN roles ON employees.role_id = roles.id 
